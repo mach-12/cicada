@@ -17,7 +17,7 @@ from tensorflow.keras.optimizers import Adam
 
 from utils import IsValidFile, CreateFolder
 from generator import SyntheticRegionETGenerator
-from models import TeacherAutoencoder, CicadaV1HGQ, CicadaV2HGQ
+from models_hgq import TeacherAutoencoder, CicadaV1HGQ, CicadaV2HGQ
 
 
 def loss(y_true: npt.NDArray, y_pred: npt.NDArray) -> npt.NDArray:
