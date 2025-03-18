@@ -92,6 +92,7 @@ class CicadaV1HGQ:
 
     def get_model(self):
         inputs = Input(shape=self.input_shape, name="inputs_")
+        x = HActivation(activation="linear")(inputs)
         x = HDenseBatchNorm(
             units=16,
         )(inputs)
@@ -108,6 +109,7 @@ class CicadaV2HGQ:
 
     def get_model(self):
         inputs = Input(shape=self.input_shape, name="inputs_")
+        x = HActivation(activation="linear")(inputs)
         x = Reshape((18, 14, 1), name="reshape")(inputs)
         x = HConv2D(
             filters=4,

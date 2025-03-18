@@ -15,11 +15,6 @@ from tensorflow.keras.layers import (
 from qkeras import QActivation, QConv2D, QDense, QDenseBatchnorm, quantized_bits
 
 
-from HGQ.layers import HActivation, HConv2D, HDenseBatchNorm, HConv2DBatchNorm, HDense
-
-from HGQ.quantizer import quantizer
-
-
 class TeacherAutoencoder:
     def __init__(self, input_shape: tuple):
         self.input_shape = input_shape
@@ -148,43 +143,3 @@ class CicadaV2:
         outputs = QActivation("quantized_relu(16, 8)", name="outputs")(x)
         return Model(inputs, outputs, name="cicada-v2")
 
-
-class CicadaV1HGQ:
-    def __init__(self, input_shape: tuple):
-        self.input_shape = input_shape
-
-    def get_model(self):
-        inputs = Input(shape=self.input_shape, name="inputs_")
-        x = HDenseBatchNorm(
-            units=16,
-        )(inputs)
-        x = HActivation(activation="relu")(x)
-        x = Dropout(1 / 8)(x)
-        x = HDense(units=1, use_bias=False)(x)
-        outputs = HActivation(activation="relu")(x)
-        return Model(inputs, outputs, name="cicada-v1")
-
-
-class CicadaV2HGQ:
-    def __init__(self, input_shape: tuple):
-        self.input_shape = input_shape
-
-    def get_model(self):
-        inputs = Input(shape=self.input_shape, name="inputs_")
-        x = Reshape((18, 14, 1), name="reshape")(inputs)
-        x = HConv2D(
-            filters=4,
-            kernel_size=(2, 2),
-            strides=2,
-            padding="valid",
-            use_bias=False,
-        )(x)
-        x = HActivation(activation="relu")(x)
-        x = Flatten(name="flatten")(x)
-        x = Dropout(1 / 9)(x)
-        x = HDenseBatchNorm(units=16)(x)
-        x = HActivation("relu")(x)
-        x = Dropout(1 / 8)(x)
-        x = HDense(units=1)(x)
-        outputs = HActivation(activation="relu")(x)
-        return Model(inputs, outputs, name="cicada-v2")
